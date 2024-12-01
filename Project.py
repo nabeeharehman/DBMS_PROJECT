@@ -126,8 +126,7 @@ class CustomerSignIN(QtWidgets.QMainWindow):
         server = 'USER-PC\\MYSQLSERVER1'
         database = 'project_database'  # Name of your Northwind database
         use_windows_authentication = True  # Set to True to use Windows Authentication
-        username = 'your_username'  # Specify a username if not using Windows Authentication
-        password = 'your_password'  # Specify a password if not using Windows Authentication
+        
 
 
         # Create the connection string based on the authentication method chosen
@@ -141,16 +140,20 @@ class CustomerSignIN(QtWidgets.QMainWindow):
 
         # Create a cursor to interact with the database
         cursor = connection.cursor()
-        
+        print(username)
+        print(password)
         stored_procedure = "EXEC LoginClient @ClientUserName=?,@ClientPassword=?"
         cursor.execute(stored_procedure, username, password)
         result = cursor.fetchone()
         if result:
             message = result[0]  
             QMessageBox.information(self, "Login Status", message)
+            
         else:
             QMessageBox.warning(self, "Login Status", "Invalid username or password.")
         connection.close()
+        
+        
         
         
 
