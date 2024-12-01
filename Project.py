@@ -109,14 +109,14 @@ class CustomerSignUP(QtWidgets.QMainWindow):
     def CsignUP(self):
         name=self.CustomerName.text()
         cnic= self.CustomerCNIC.text()
-        # address=self.CustomerAddress.text()
-        # email=self.CustomerEmailAddress.text()
+        address=self.CustomerAddress.text()
+        email=self.CustomerEmailAddress.text()
         phone=self.CustomerPhone.text()
         username=self.CustomerUserName.text()
         password=self.CustomerPassword.text()
         
         server = 'USER-PC\\MYSQLSERVER1'
-        database = 'project'  # Name of your Northwind database
+        database = 'project1'  # Name of your Northwind database
         use_windows_authentication = True  # Set to True to use Windows Authentication
         
 
@@ -133,16 +133,20 @@ class CustomerSignUP(QtWidgets.QMainWindow):
         # Create a cursor to interact with the database
         cursor = connection.cursor()
         
-        stored_procedure="EXEC SignupClient @ClientName=?, @ClientUserName=?, @ClientPassword=?, @ClientCNIC=?, @ClientPhoneNumber=?"
-        cursor.execute(stored_procedure,name,username,password,cnic,phone)
-        result = cursor.fetchone()
+        stored_procedure="EXEC SignupClient @ClientName=?,@ClientUserName=?,@ClientPassword=?,@ClientCNIC=?,@ClientAddress=?,@ClientEmail=?,@ClientPhoneNumber=?"
+        cursor.execute(stored_procedure,name,username,password,cnic,address,email,phone)
+        if cursor.rowcount > 0: 
+            connection.commit()
+        else:
+            connection.rollback()
+        result = cursor.fetchall()
         if result:
-            message = result[0]  
+            message = result[0]
             QMessageBox.information(self, "SignUP Status", message)
             
             
         else:
-            QMessageBox.warning(self, "Login Status", "Sign Up failed. Try Again.")
+            QMessageBox.warning(self, "SignUP Status", "Sign Up failed. Try Again.")
         connection.close()
 
 
@@ -184,7 +188,7 @@ class ManagerSignIN(QtWidgets.QMainWindow):
         password=self.Password.text()
         
         server = 'USER-PC\\MYSQLSERVER1'
-        database = 'project'  # Name of your Northwind database
+        database = 'project1'  # Name of your Northwind database
         use_windows_authentication = True  # Set to True to use Windows Authentication
         
 
@@ -260,7 +264,7 @@ class CustomerSignIN(QtWidgets.QMainWindow):
         password=self.Password.text()
         
         server = 'USER-PC\\MYSQLSERVER1'
-        database = 'project'  # Name of your Northwind database
+        database = 'project1'  # Name of your Northwind database
         use_windows_authentication = True  # Set to True to use Windows Authentication
         
 
