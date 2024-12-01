@@ -41,12 +41,13 @@ class MainScreen(QtWidgets.QMainWindow):
         
 
         # Connect Submit Button to Event Handling Code
-        
+        self.Close.clicked.connect(self.close)
         self.CustomerComboBox.currentTextChanged.connect(self.change_mode)
         self.change_mode()
             
         
-        
+    def close(self):
+        sys.exit()
     
     
     def change_mode(self):
@@ -288,6 +289,13 @@ class CustomerSignIN(QtWidgets.QMainWindow):
         if result:
             message = result[0]  
             QMessageBox.information(self, "Login Status", message)
+            query="select ClientID from Client where ClientUsername=?"
+            cursor.execute(query,username)
+            clientID=cursor.fetchone()[0]
+            print(clientID)
+            self.dashboard= CustomerDashBoard(clientID)
+            self.dashboard.show()
+            
             
             
         else:
@@ -295,8 +303,100 @@ class CustomerSignIN(QtWidgets.QMainWindow):
         connection.close()
         
         
+
+class CustomerDashBoard(QtWidgets.QMainWindow):
+    
+    def __init__(self, clientID:int):
+        
+        # Call the inherited classes __init__ method
+        super(CustomerDashBoard, self).__init__()
+        
+        self.ClientID= clientID
+
+        # Load the .ui file
+        uic.loadUi('Customer\\Customer Dashboard.ui', self)
+        self.show()
+        
+        server = 'USER-PC\\MYSQLSERVER1'
+        database = 'project1'  # Name of your Northwind database
+        use_windows_authentication = True  # Set to True to use Windows Authentication
+        
+
+
+        # Create the connection string based on the authentication method chosen
+        if use_windows_authentication:
+            connection_string = f'DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={server};DATABASE={database};Trusted_Connection=yes;'
+        else:
+            connection_string = f'DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={server};DATABASE={database};UID={username};PWD={password}'
+
+        # Establish a connection to the database
+        connection = pyodbc.connect(connection_string)
+
+        # Create a cursor to interact with the database
+        cursor = connection.cursor()
+        query="select ClientName,ClientPhoneNumber,ClientCNIC from Client where ClientID=?"
+        cursor.execute(query,clientID)
+        result=cursor.fetchone()
+        name,phone,cnic=result
+        name= "Welcome, "+name
+        phone=str(phone)
+        cnic=str(cnic)
+        
+        self.Name.setText(name)
+        self.Name.setEnabled(False)
+        self.Phone.setText(phone)
+        self.Phone.setEnabled(False)
+        self.CNIC.setText(cnic)
+        self.CNIC.setEnabled(False)
+        
+        self.BookAppointment.clicked.connect(self.book)
+        self.ViewAppointments.clicked.connect(self.view)
+        
+    def book(self):
+        self.booking=BookAppointment()
+        self.booking.show()
+        
+    def view(self):
+        self.view= ViewAppointment()
+        self.view.show()
+        
+
+class BookAppointment(QtWidgets.QMainWindow):
+    def __init__(self):
+        
+        # Call the inherited classes __init__ method
+        super(BookAppointment, self).__init__()
+
+        # Load the .ui file
+        uic.loadUi('Customer\\Book Appointments.ui', self)
+        self.show()
+        
+class ViewAppointment(QtWidgets.QMainWindow):
+    def __init__(self):
+        
+        # Call the inherited classes __init__ method
+        super(ViewAppointment, self).__init__()
+
+        # Load the .ui file
+        uic.loadUi('Customer\\Upcoming_PastAppointments.ui', self)
+        self.show()
         
         
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+
+        
+
+             
 
         
 def main():

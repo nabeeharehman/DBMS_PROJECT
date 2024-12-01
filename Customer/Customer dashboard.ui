@@ -42,7 +42,7 @@
       <string>My Account:</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="pushButton">
+    <widget class="QPushButton" name="BookAppointment">
      <property name="geometry">
       <rect>
        <x>90</x>
@@ -55,7 +55,7 @@
       <string>Book Appointment</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="pushButton_2">
+    <widget class="QPushButton" name="ViewAppointments">
      <property name="geometry">
       <rect>
        <x>90</x>
@@ -81,7 +81,7 @@
       <string>Close</string>
      </property>
     </widget>
-    <widget class="QLineEdit" name="lineEdit">
+    <widget class="QLineEdit" name="Name">
      <property name="geometry">
       <rect>
        <x>80</x>
@@ -120,7 +120,7 @@
       <string>CNIC: </string>
      </property>
     </widget>
-    <widget class="QLineEdit" name="lineEdit_2">
+    <widget class="QLineEdit" name="Phone">
      <property name="geometry">
       <rect>
        <x>120</x>
@@ -133,7 +133,7 @@
       <string>1234-567890</string>
      </property>
     </widget>
-    <widget class="QLineEdit" name="lineEdit_3">
+    <widget class="QLineEdit" name="CNIC">
      <property name="geometry">
       <rect>
        <x>90</x>
@@ -154,7 +154,7 @@
      <x>0</x>
      <y>0</y>
      <width>473</width>
-     <height>21</height>
+     <height>26</height>
     </rect>
    </property>
   </widget>
