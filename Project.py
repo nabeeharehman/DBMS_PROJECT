@@ -142,10 +142,18 @@ class CustomerSignIN(QtWidgets.QMainWindow):
         # Create a cursor to interact with the database
         cursor = connection.cursor()
         
-        stored_procedure = "{CALL LoginClient (?, ?)}"
+        stored_procedure = "EXEC LoginClient @ClientUserName=?,@ClientPassword=?"
         cursor.execute(stored_procedure, username, password)
         result = cursor.fetchone()
+        if result:
+            message = result[0]  
+            QMessageBox.information(self, "Login Status", message)
+        else:
+            QMessageBox.warning(self, "Login Status", "Invalid username or password.")
         connection.close()
+        
+        
+
         
 def main():
     app = QApplication(sys.argv)
