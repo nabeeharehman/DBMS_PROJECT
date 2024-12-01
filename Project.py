@@ -59,7 +59,7 @@ class MainScreen(QtWidgets.QMainWindow):
         
         if current=='Customer':
             self.SignIN.clicked.connect(self.customer_signIN)
-            # self.SignUP.clicked.connect(self.customer_signUP)
+            self.SignUP.clicked.connect(self.customer_signUP)
             
         elif current=="Manager":
             self.SignUP.setEnabled(False)
@@ -105,10 +105,53 @@ class CustomerSignUP(QtWidgets.QMainWindow):
         super(CustomerSignUP, self).__init__()
 
         # Load the .ui file
-        uic.loadUi('Customer\SignUp.ui', self)
+        uic.loadUi('Customer\\SignUp.ui', self)
         self.show()
         
-        self.
+        self.CustomerConfirm.clicked.connect(self.CsignUP)
+        
+    
+    def CsignUP(self):
+        name=self.CustomerName.text()
+        cnic= self.CustomerCNIC.text()
+        # address=self.CustomerAddress.text()
+        # email=self.CustomerEmailAddress.text()
+        phone=self.CustomerPhone.text()
+        username=self.CustomerUserName.text()
+        password=self.CustomerPassword.text()
+        
+        server = 'USER-PC\\MYSQLSERVER1'
+        database = 'project_database'  # Name of your Northwind database
+        use_windows_authentication = True  # Set to True to use Windows Authentication
+        
+
+
+        # Create the connection string based on the authentication method chosen
+        if use_windows_authentication:
+            connection_string = f'DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={server};DATABASE={database};Trusted_Connection=yes;'
+        else:
+            connection_string = f'DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={server};DATABASE={database};UID={username};PWD={password}'
+
+        # Establish a connection to the database
+        connection = pyodbc.connect(connection_string)
+
+        # Create a cursor to interact with the database
+        cursor = connection.cursor()
+        
+        stored_procedure="EXEC SignUPClient @ClientName=?, @ClientUserName=?, @ClientPassword=?, @ClientCNIC=?, @ClientPhoneNumber=?"
+        cursor.execute(stored_procedure,name,username,password,cnic,phone)
+        result = cursor.fetchone()
+        if result:
+            message = result[0]  
+            QMessageBox.information(self, "SignUP Status", message)
+            
+            
+        else:
+            QMessageBox.warning(self, "Login Status", "Sign Up failed. Try Again.")
+        connection.close()
+        
+        
+        
 
         
 

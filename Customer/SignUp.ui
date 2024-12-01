@@ -88,7 +88,7 @@
       </rect>
      </property>
     </widget>
-    <widget class="QPushButton" name="pushButton">
+    <widget class="QPushButton" name="CustomerConfirm">
      <property name="geometry">
       <rect>
        <x>464</x>
@@ -137,7 +137,7 @@
       <string>Email Address:</string>
      </property>
     </widget>
-    <widget class="QLineEdit" name="CustomerEmailAdress">
+    <widget class="QLineEdit" name="CustomerEmailAddress">
      <property name="geometry">
       <rect>
        <x>180</x>
