@@ -47,7 +47,7 @@ class MainScreen(QtWidgets.QMainWindow):
         
         if current=='Customer':
             self.SignIN.clicked.connect(self.customer_signIN)
-            # self.SignUP.clicked.connect(self.customer_signUP)
+            self.SignUP.clicked.connect(self.customer_signUP)
             
         elif current=="Employee":
             self.SignUP.setEnabled(False)
@@ -69,9 +69,9 @@ class MainScreen(QtWidgets.QMainWindow):
         self.customer= CustomerSignIN()
         self.customer.show()
         
-    # def customer_signUP(self):
-    #     self.customer= CustomerSignUP()
-    #     self.customer.show()
+    def customer_signUP(self):
+        self.customer= CustomerSignUP()
+        self.customer.show()
     
     # def cmanager_signIN(self):
     #     self.manager= ManagerSignIN()
@@ -82,7 +82,37 @@ class MainScreen(QtWidgets.QMainWindow):
             
         
 
-    
+class CustomerSignUP(QtWidgets.QMainWindow):
+    def __init__(self):
+        """
+        Initialize the main UI window.
+
+        This constructor is called when an instance of the UI class is created.
+        It performs the following tasks:
+        1. Calls the constructor of the inherited class.
+        2. Loads the user interface (UI) from the 'MainWindow.ui' file.
+        3. Populates the 'orderTable' with data.
+        4. Connects the "Insert Order" button to the event handler for opening the
+        master transaction form.
+
+        Note:
+        - The 'MainWindow.ui' file should exist and contain the required UI elements.
+
+        Returns:
+        None
+        """
+        # Call the inherited classes __init__ method
+        super(CustomerSignUP, self).__init__()
+
+        # Load the .ui file
+        uic.loadUi('Customer\SignUp.ui', self)
+        self.show()
+        
+        self.
+
+        
+
+        
 
 
 
@@ -148,6 +178,7 @@ class CustomerSignIN(QtWidgets.QMainWindow):
         if result:
             message = result[0]  
             QMessageBox.information(self, "Login Status", message)
+            
             
         else:
             QMessageBox.warning(self, "Login Status", "Invalid username or password.")
