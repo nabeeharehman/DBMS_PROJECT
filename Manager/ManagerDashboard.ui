@@ -42,7 +42,7 @@
       <string>Manager Dashboard:</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="pushButton">
+    <widget class="QPushButton" name="Manage">
      <property name="geometry">
       <rect>
        <x>50</x>
@@ -55,19 +55,6 @@
       <string>Manage Appointments</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="pushButton_2">
-     <property name="geometry">
-      <rect>
-       <x>50</x>
-       <y>120</y>
-       <width>221</width>
-       <height>23</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Manage Employees</string>
-     </property>
-    </widget>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -76,7 +63,7 @@
      <x>0</x>
      <y>0</y>
      <width>361</width>
-     <height>21</height>
+     <height>26</height>
     </rect>
    </property>
   </widget>

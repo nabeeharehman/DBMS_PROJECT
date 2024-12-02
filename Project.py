@@ -213,6 +213,13 @@ class ManagerSignIN(QtWidgets.QMainWindow):
         if result:
             message = result[0]  
             QMessageBox.information(self, "Login Status", message)
+            query="select ManagerID from Manager where ManagerUserName=?"
+            cursor.execute(query,username)
+            managerID=cursor.fetchone()[0]
+            print(managerID)
+            self.dashboard= ManagerDashboard(managerID)
+            self.dashboard.show()
+            
             
         else:
             QMessageBox.warning(self, "Login Status", "Invalid username or password.")
@@ -349,37 +356,154 @@ class CustomerDashBoard(QtWidgets.QMainWindow):
         self.CNIC.setText(cnic)
         self.CNIC.setEnabled(False)
         
-        self.BookAppointment.clicked.connect(self.book)
-        self.ViewAppointments.clicked.connect(self.view)
+        self.BookAppointment.clicked.connect(lambda:self.book(clientID))
+        self.ViewAppointments.clicked.connect(lambda:self.view(clientID))
         
-    def book(self):
-        self.booking=BookAppointment()
+    def book(self,clientID:int):
+        self.booking=BookAppointment(clientID)
         self.booking.show()
         
-    def view(self):
-        self.view= ViewAppointment()
+    def view(self,clientID:int):
+        self.view= ViewAppointment(clientID)
         self.view.show()
         
 
 class BookAppointment(QtWidgets.QMainWindow):
-    def __init__(self):
+    def __init__(self,clientID:int):
         
         # Call the inherited classes __init__ method
         super(BookAppointment, self).__init__()
 
         # Load the .ui file
-        uic.loadUi('Customer\\Book Appointments.ui', self)
+        uic.loadUi('BookAppointment.ui', self)
         self.show()
         
+        
+        
 class ViewAppointment(QtWidgets.QMainWindow):
-    def __init__(self):
+    def __init__(self,clientID:int):
         
         # Call the inherited classes __init__ method
         super(ViewAppointment, self).__init__()
 
         # Load the .ui file
-        uic.loadUi('Customer\\Upcoming_PastAppointments.ui', self)
+        uic.loadUi('Customer\\ViewAppointments.ui', self)
         self.show()
+        
+        self.ClientID=clientID
+        
+        server = 'USER-PC\\MYSQLSERVER1'
+        database = 'project1'  # Name of your Northwind database
+        use_windows_authentication = True  # Set to True to use Windows Authentication
+        
+
+
+        # Create the connection string based on the authentication method chosen
+        if use_windows_authentication:
+            connection_string = f'DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={server};DATABASE={database};Trusted_Connection=yes;'
+        else:
+            connection_string = f'DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={server};DATABASE={database};UID={username};PWD={password}'
+
+        # Establish a connection to the database
+        connection = pyodbc.connect(connection_string)
+
+        # Create a cursor to interact with the database
+        cursor = connection.cursor()
+        query="EXEC PastAppointments @ClientID=?"
+        cursor.execute(query,clientID)
+        result=cursor.fetchall()
+        
+        for row_index, row_data in enumerate(result):
+            self.History.insertRow(row_index)
+            for col_index, cell_data in enumerate(row_data):
+                item = QTableWidgetItem(str(cell_data))
+                self.History.setItem(row_index, col_index, item)
+                
+        
+        query1="EXEC FutureAppointments @ClientID=?"
+        cursor.execute(query1,clientID)
+        result1=cursor.fetchall()
+        
+        for row_index, row_data in enumerate(result1):
+            self.Upcoming.insertRow(row_index)
+            for col_index, cell_data in enumerate(row_data):
+                item = QTableWidgetItem(str(cell_data))
+                self.Upcoming.setItem(row_index, col_index, item)
+                
+class ManagerDashboard(QtWidgets.QMainWindow):
+    def __init__(self,ManagerID:int):
+        
+        # Call the inherited classes __init__ method
+        super(ManagerDashboard, self).__init__()
+
+        # Load the .ui file
+        uic.loadUi('Manager\\ManagerDashboard.ui', self)
+        self.show() 
+        
+        self.Manage.clicked.connect(lambda:self.manage(ManagerID))
+        
+        
+    def manage(self,ID:int):
+        self.manage=ManageAppointments(ID)
+        self.manage.show()
+        
+        
+
+class ManageAppointments(QtWidgets.QMainWindow):
+    def __init__(self,ManagerID:int):
+        
+        # Call the inherited classes __init__ method
+        super(ManageAppointments, self).__init__()
+
+        # Load the .ui file
+        uic.loadUi('Manager\\ManageAppointments.ui', self)
+        self.show()
+        
+        server = 'USER-PC\\MYSQLSERVER1'
+        database = 'project1'  # Name of your Northwind database
+        use_windows_authentication = True  # Set to True to use Windows Authentication
+        
+
+
+        # Create the connection string based on the authentication method chosen
+        if use_windows_authentication:
+            connection_string = f'DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={server};DATABASE={database};Trusted_Connection=yes;'
+        else:
+            connection_string = f'DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={server};DATABASE={database};UID={username};PWD={password}'
+
+        # Establish a connection to the database
+        connection = pyodbc.connect(connection_string)
+
+        # Create a cursor to interact with the database
+        cursor = connection.cursor()
+        query="select* from Appointments"
+        cursor.execute(query)
+        result=cursor.fetchall()
+        
+        for row_index, row_data in enumerate(result):
+            self.Appointment.insertRow(row_index)
+            for col_index, cell_data in enumerate(row_data):
+                item = QTableWidgetItem(str(cell_data))
+                self.Appointment.setItem(row_index, col_index, item)
+                
+                
+        self.Assign.clicked.connect(lambda:self.assign(ManagerID))
+        
+#     def assign(ID:int):
+        
+# class ManageAppointments(QtWidgets.QMainWindow):
+#     def __init__(self,ManagerID:int):
+        
+#         # Call the inherited classes __init__ method
+#         super(ManageAppointments, self).__init__()
+
+#         # Load the .ui file
+#         uic.loadUi('Manager\\ManageAppointments.ui', self)
+#         self.show()
+        
+        
+         
+
         
         
         
